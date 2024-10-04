@@ -10,7 +10,9 @@
     ></div>
   </div>
 </div>
-<p>Current Player: {{ currentPlayer === "B" ? "Black" : "White" }}</p>
+<p>
+  Current Player: {{ currentPlayer === "B" ? "Black (AI)" : "White (You)" }}
+</p>
 <p>Black: {{ score.B }} | White: {{ score.W }}</p>
-<p *ngIf="gameOver">Game Over!</p>
+<p>{{ message }}</p>
 <button (click)="resetGame()">Reset Game</button>

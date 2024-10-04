@@ -15,6 +15,7 @@ export class GameComponent implements OnInit {
   currentPlayer: string = 'B';
   score: { B: number; W: number } = { B: 0, W: 0 };
   gameOver: boolean = false;
+  message: string = '';
 
   constructor(private gameService: GameService) {}
 
@@ -27,6 +28,8 @@ export class GameComponent implements OnInit {
     this.currentPlayer = 'B';
     this.updateScore();
     this.gameOver = false;
+    this.message = '';
+    this.makeAIMove();
   }
 
   makeMove(row: number, col: number) {
@@ -47,11 +50,30 @@ export class GameComponent implements OnInit {
     }
   }
 
+  makeAIMove() {
+    if (this.gameOver || this.currentPlayer !== 'B') return;
+
+    const aiMove = this.gameService.getAIMove(this.board);
+    if (aiMove) {
+      const [row, col] = aiMove;
+      this.board = this.gameService.makeMove(this.board, row, col, 'B');
+      this.switchPlayer();
+      this.updateScore();
+      this.checkGameState();
+    } else {
+      this.switchPlayer();
+    }
+  }
+
   switchPlayer() {
     this.currentPlayer = this.currentPlayer === 'B' ? 'W' : 'B';
     if (!this.gameService.hasValidMoves(this.board, this.currentPlayer)) {
-      console.log(`No valid moves for ${this.currentPlayer}. Switching back.`);
+      this.message = `No valid moves for ${
+        this.currentPlayer === 'B' ? 'Black' : 'White'
+      }. Switching back.`;
       this.currentPlayer = this.currentPlayer === 'B' ? 'W' : 'B';
+    } else {
+      this.message = '';
     }
   }
 
@@ -62,7 +84,14 @@ export class GameComponent implements OnInit {
   checkGameState() {
     if (this.gameService.isGameOver(this.board)) {
       this.gameOver = true;
-      console.log('Game over!');
+      this.message = 'Game Over!';
+      if (this.score.B > this.score.W) {
+        this.message += ' Black wins!';
+      } else if (this.score.B < this.score.W) {
+        this.message += ' White wins!';
+      } else {
+        this.message += " It's a tie!";
+      }
     }
   }
 }

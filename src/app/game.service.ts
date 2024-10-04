@@ -119,4 +119,83 @@ export class GameService {
   isGameOver(board: string[][]): boolean {
     return !this.hasValidMoves(board, 'B') && !this.hasValidMoves(board, 'W');
   }
+
+  getAIMove(board: string[][]): [number, number] | null {
+    let bestMove: [number, number] | null = null;
+    let minOpponentMoves = Infinity;
+
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (this.isValidMove(board, row, col, 'B')) {
+          const newBoard = this.makeMove(board, row, col, 'B');
+          const opponentMoves = this.countValidMoves(newBoard, 'W');
+
+          if (opponentMoves < minOpponentMoves) {
+            minOpponentMoves = opponentMoves;
+            bestMove = [row, col];
+          } else if (opponentMoves === minOpponentMoves) {
+            // If moves are equal, prefer corners and edges
+            if (
+              this.isCornerOrEdge(row, col) &&
+              !this.isCornerOrEdge(bestMove![0], bestMove![1])
+            ) {
+              bestMove = [row, col];
+            }
+          }
+        }
+      }
+    }
+
+    return bestMove;
+  }
+
+  private countValidMoves(board: string[][], player: string): number {
+    let count = 0;
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (this.isValidMove(board, row, col, player)) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  // Helper method to check if a position is a corner or edge
+  private isCornerOrEdge(row: number, col: number): boolean {
+    return row === 0 || row === 7 || col === 0 || col === 7;
+  }
+
+  // Add a method to evaluate the board state (useful for more advanced AI)
+  evaluateBoard(board: string[][], player: string): number {
+    const opponent = player === 'B' ? 'W' : 'B';
+    let score = 0;
+
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (board[row][col] === player) {
+          score += this.getPositionValue(row, col);
+        } else if (board[row][col] === opponent) {
+          score -= this.getPositionValue(row, col);
+        }
+      }
+    }
+
+    return score;
+  }
+
+  // Helper method to get the value of a position on the board
+  private getPositionValue(row: number, col: number): number {
+    const valueMap = [
+      [100, -10, 11, 6, 6, 11, -10, 100],
+      [-10, -20, 1, 2, 2, 1, -20, -10],
+      [11, 1, 3, 4, 4, 3, 1, 11],
+      [6, 2, 4, 3, 3, 4, 2, 6],
+      [6, 2, 4, 3, 3, 4, 2, 6],
+      [11, 1, 3, 4, 4, 3, 1, 11],
+      [-10, -20, 1, 2, 2, 1, -20, -10],
+      [100, -10, 11, 6, 6, 11, -10, 100]
+    ];
+    return valueMap[row][col];
+  }
 }
