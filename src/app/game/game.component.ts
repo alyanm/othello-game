@@ -47,6 +47,10 @@ export class GameComponent implements OnInit {
       this.switchPlayer();
       this.updateScore();
       this.checkGameState();
+
+      if (!this.gameOver) {
+        setTimeout(() => this.makeAIMove(), 500); // Delay AI move for better UX
+      }
     }
   }
 
