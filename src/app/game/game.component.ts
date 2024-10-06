@@ -90,11 +90,13 @@ export class GameComponent implements OnInit {
       this.gameOver = true;
       this.message = 'Game Over!';
       if (this.score.B > this.score.W) {
-        this.message += ' Black wins!';
-      } else if (this.score.B < this.score.W) {
-        this.message += ' White wins!';
-      } else {
-        this.message += " It's a tie!";
+        if (this.score.B > this.score.W) {
+          this.message += ' Black wins!';
+        } else if (this.score.B < this.score.W) {
+          this.message += ' White wins!';
+        } else {
+          this.message += " It's a tie!";
+        }
       }
     }
   }
