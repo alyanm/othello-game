@@ -59,6 +59,7 @@ export class GameComponent implements OnInit {
 
     const aiMove = this.gameService.getAIMove(this.board);
     if (aiMove) {
+      console.log('AI Move:', aiMove);
       const [row, col] = aiMove;
       this.board = this.gameService.makeMove(this.board, row, col, 'B');
       this.switchPlayer();

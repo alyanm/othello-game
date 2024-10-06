@@ -139,7 +139,7 @@ export class GameService {
         false
       );
 
-      if (score < bestScore) {
+      if (score > bestScore) {
         bestScore = score;
         bestMove = move;
       }
