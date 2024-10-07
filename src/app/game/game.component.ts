@@ -16,6 +16,7 @@ export class GameComponent implements OnInit {
   currentPlayer: string = 'B';
   userPlayer: string = 'W';
   AIPlayer: string = 'B';
+  isBlack: boolean = true;
   score: { B: number; W: number } = { B: 0, W: 0 };
   gameOver: boolean = false;
   message: string = '';
@@ -32,8 +33,8 @@ export class GameComponent implements OnInit {
     this.updateScore();
     this.gameOver = false;
     this.message = '';
-    this.AIPlayer = this.userPlayer === 'B' ? 'W' : 'B';
-    if (this.AIPlayer === 'B') {
+    this.AIPlayer = this.isBlack ? 'W' : 'B';
+    if (!this.isBlack) {
       this.makeAIMove();
     }
   }

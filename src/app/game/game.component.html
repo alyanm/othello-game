@@ -1,6 +1,24 @@
 <h1>Othello</h1>
-<div class="user_select">
-  <label>Select User Color:
+
+<div class="toggle-switch">
+  <input
+    type="checkbox"
+    id="colorToggle"
+    [(ngModel)]="isBlack"
+    (change)="resetGame()"
+    title="Toggle to select Black or White"
+    placeholder="Select Color"
+  />
+  <label for="colorToggle" class="toggle-label">
+    <span class="toggle-inner"></span>
+    <span class="toggle-switch"></span>
+  </label>
+  <span>{{ isBlack ? "Black" : "White" }}</span>
+</div>
+
+<!-- <div class="user_select">
+  <label
+    >Select User Color:
     <input
       type="radio"
       name="player"
@@ -20,19 +38,23 @@
     />
     White
   </label>
-</div>
+</div> -->
+
 <div class="board">
   <div *ngFor="let row of board; let i = index" class="row">
     <div
       *ngFor="let cell of row; let j = index"
       class="cell"
-      [class.black]="cell === 'B'"
-      [class.white]="cell === 'W'"
       (click)="makeMove(i, j)"
-    ></div>
+    >
+      <div *ngIf="cell === 'B'" class="piece black"></div>
+      <div *ngIf="cell === 'W'" class="piece white"></div>
+    </div>
   </div>
 </div>
-<p>Current Player: {{ currentPlayer === "B" ? "Black" : "White" }}</p>
-<p>Black: {{ score.B }} | White: {{ score.W }}</p>
-<p>{{ message }}</p>
-<button (click)="resetGame()">Reset Game</button>
+<div class="game_info">
+  <p>Current Player: {{ currentPlayer === "B" ? "Black" : "White" }}</p>
+  <p>Black: {{ score.B }} | White: {{ score.W }}</p>
+  <p>{{ message }}</p>
+  <button (click)="resetGame()">Reset Game</button>
+</div>
