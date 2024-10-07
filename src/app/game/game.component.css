@@ -24,3 +24,8 @@
 .white {
   background-color: white;
 }
+
+.user_select {
+  background-color: yellow;
+  padding: 20px;
+}

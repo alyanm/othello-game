@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-game',
   standalone: true,
   providers: [GameService],
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
 })
 export class GameComponent implements OnInit {
   board: string[][] = [];
   currentPlayer: string = 'B';
+  userPlayer: string = 'W';
+  AIPlayer: string = 'B';
   score: { B: number; W: number } = { B: 0, W: 0 };
   gameOver: boolean = false;
   message: string = '';
@@ -29,7 +32,10 @@ export class GameComponent implements OnInit {
     this.updateScore();
     this.gameOver = false;
     this.message = '';
-    this.makeAIMove();
+    this.AIPlayer = this.userPlayer === 'B' ? 'W' : 'B';
+    if (this.AIPlayer === 'B') {
+      this.makeAIMove();
+    }
   }
 
   makeMove(row: number, col: number) {
@@ -55,13 +61,18 @@ export class GameComponent implements OnInit {
   }
 
   makeAIMove() {
-    if (this.gameOver || this.currentPlayer !== 'B') return;
+    if (this.gameOver || this.currentPlayer === this.userPlayer) return;
 
-    const aiMove = this.gameService.getAIMove(this.board);
+    const aiMove = this.gameService.getAIMove(this.board, this.AIPlayer);
     if (aiMove) {
       console.log('AI Move:', aiMove);
       const [row, col] = aiMove;
-      this.board = this.gameService.makeMove(this.board, row, col, 'B');
+      this.board = this.gameService.makeMove(
+        this.board,
+        row,
+        col,
+        this.AIPlayer
+      );
       this.switchPlayer();
       this.updateScore();
       this.checkGameState();

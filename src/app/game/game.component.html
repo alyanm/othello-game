@@ -1,4 +1,26 @@
 <h1>Othello</h1>
+<div class="user_select">
+  <label>Select User Color:
+    <input
+      type="radio"
+      name="player"
+      value="B"
+      [(ngModel)]="userPlayer"
+      (change)="resetGame()"
+    />
+    Black
+  </label>
+  <label>
+    <input
+      type="radio"
+      name="player"
+      value="W"
+      [(ngModel)]="userPlayer"
+      (change)="resetGame()"
+    />
+    White
+  </label>
+</div>
 <div class="board">
   <div *ngFor="let row of board; let i = index" class="row">
     <div
@@ -10,9 +32,7 @@
     ></div>
   </div>
 </div>
-<p>
-  Current Player: {{ currentPlayer === "B" ? "Black (AI)" : "White (You)" }}
-</p>
+<p>Current Player: {{ currentPlayer === "B" ? "Black" : "White" }}</p>
 <p>Black: {{ score.B }} | White: {{ score.W }}</p>
 <p>{{ message }}</p>
 <button (click)="resetGame()">Reset Game</button>

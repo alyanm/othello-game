@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class GameService {
   private readonly DEPTH = 5;
+  private AIPlayer = 'B';
+  private userPlayer = 'W';
 
   initializeBoard(): string[][] {
     const board = Array(8)
@@ -122,15 +124,17 @@ export class GameService {
     return !this.hasValidMoves(board, 'B') && !this.hasValidMoves(board, 'W');
   }
 
-  getAIMove(board: string[][]): [number, number] | null {
-    const availableMoves = this.getAvailableMoves(board, 'B');
+  getAIMove(board: string[][], color: string): [number, number] | null {
+    this.AIPlayer = color;
+    this.userPlayer = color === 'B' ? 'W' : 'B';
+    const availableMoves = this.getAvailableMoves(board, this.AIPlayer);
     if (availableMoves.length === 0) return null;
 
     let bestMove: [number, number] | null = null;
     let bestScore = -Infinity;
 
     for (const move of availableMoves) {
-      const newBoard = this.makeMove(board, move[0], move[1], 'B');
+      const newBoard = this.makeMove(board, move[0], move[1], this.AIPlayer);
       const score = this.minimax(
         newBoard,
         this.DEPTH,
@@ -156,10 +160,10 @@ export class GameService {
     isMaximizingPlayer: boolean
   ): number {
     if (depth === 0 || this.isGameOver(board)) {
-      return this.evaluateBoard(board, 'B');
+      return this.evaluateBoard(board, this.AIPlayer);
     }
 
-    const player = isMaximizingPlayer ? 'B' : 'W';
+    const player = isMaximizingPlayer ? this.AIPlayer : this.userPlayer;
     const availableMoves = this.getAvailableMoves(board, player);
     if (availableMoves.length === 0) {
       // If the current player has no valid moves, skip their turn
