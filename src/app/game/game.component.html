@@ -13,32 +13,11 @@
     <span class="toggle-inner"></span>
     <span class="toggle-switch"></span>
   </label>
-  <span>{{ isBlack ? "Black" : "White" }}</span>
 </div>
 
-<!-- <div class="user_select">
-  <label
-    >Select User Color:
-    <input
-      type="radio"
-      name="player"
-      value="B"
-      [(ngModel)]="userPlayer"
-      (change)="resetGame()"
-    />
-    Black
-  </label>
-  <label>
-    <input
-      type="radio"
-      name="player"
-      value="W"
-      [(ngModel)]="userPlayer"
-      (change)="resetGame()"
-    />
-    White
-  </label>
-</div> -->
+<p style="text-align: left">
+  You have selected {{ isBlack ? "Black" : "White" }}
+</p>
 
 <div class="board">
   <div *ngFor="let row of board; let i = index" class="row">
