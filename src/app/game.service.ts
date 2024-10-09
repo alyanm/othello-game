@@ -109,6 +109,44 @@ export class GameService {
     return score;
   }
 
+  getCellsToFlip(
+    board: string[][],
+    row: number,
+    col: number,
+    currentPlayer: string
+  ) {
+    const directions = [
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+    ];
+
+    const cellsToFlip = [];
+    for (const [dx, dy] of directions) {
+      let x = row + dx;
+      let y = col + dy;
+      const toFlip = [];
+
+      while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+        if (board[x][y] === '') break;
+        if (board[x][y] === currentPlayer) {
+          cellsToFlip.push(...toFlip);
+          break;
+        }
+        toFlip.push([x, y]);
+        x += dx;
+        y += dy;
+      }
+    }
+
+    return cellsToFlip;
+  }
+
   hasValidMoves(board: string[][], player: string): boolean {
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {

@@ -45,6 +45,7 @@ export class GameComponent implements OnInit {
     if (
       this.gameService.isValidMove(this.board, row, col, this.currentPlayer)
     ) {
+      this.animateFlip(row, col);
       this.board = this.gameService.makeMove(
         this.board,
         row,
@@ -61,6 +62,26 @@ export class GameComponent implements OnInit {
     }
   }
 
+  animateFlip(row: number, col: number) {
+    const cellsToFlip = this.gameService.getCellsToFlip(
+      this.board,
+      row,
+      col,
+      this.currentPlayer
+    );
+    console.log('Flipping:', row, col, this.currentPlayer, cellsToFlip);
+    cellsToFlip.forEach(([r, c]) => {
+      const cellElement = document.querySelector(
+        `.row:nth-child(${r + 1}) .cell:nth-child(${c + 1}) .piece`
+      );
+      if (cellElement) {
+        cellElement.classList.add('flipping');
+        console.log('Flipping:', cellElement);
+        setTimeout(() => cellElement.classList.remove('flipping'), 500);
+      }
+    });
+  }
+
   makeAIMove() {
     if (this.gameOver || this.currentPlayer === this.userPlayer) return;
 
@@ -68,6 +89,7 @@ export class GameComponent implements OnInit {
     if (aiMove) {
       console.log('AI Move:', aiMove);
       const [row, col] = aiMove;
+      this.animateFlip(row, col);
       this.board = this.gameService.makeMove(
         this.board,
         row,
