@@ -34,6 +34,7 @@ export class GameComponent implements OnInit {
     this.gameOver = false;
     this.message = '';
     this.AIPlayer = this.isBlack ? 'W' : 'B';
+    this.userPlayer = this.isBlack ? 'B' : 'W';
     if (!this.isBlack) {
       this.makeAIMove();
     }
@@ -46,19 +47,21 @@ export class GameComponent implements OnInit {
       this.gameService.isValidMove(this.board, row, col, this.currentPlayer)
     ) {
       this.animateFlip(row, col);
-      this.board = this.gameService.makeMove(
-        this.board,
-        row,
-        col,
-        this.currentPlayer
-      );
-      this.switchPlayer();
-      this.updateScore();
-      this.checkGameState();
 
-      if (!this.gameOver) {
-        setTimeout(() => this.makeAIMove(), 500); // Delay AI move for better UX
-      }
+      setTimeout(() => {
+        this.board = this.gameService.makeMove(
+          this.board,
+          row,
+          col,
+          this.currentPlayer
+        );
+        this.switchPlayer();
+        this.updateScore();
+        this.checkGameState();
+        if (!this.gameOver) {
+          setTimeout(() => this.makeAIMove(), 500); // Delay AI move for better UX
+        }
+      }, 600); // Delay to allow flip animation to complete
     }
   }
 
@@ -77,7 +80,7 @@ export class GameComponent implements OnInit {
       if (cellElement) {
         cellElement.classList.add('flipping');
         console.log('Flipping:', cellElement);
-        setTimeout(() => cellElement.classList.remove('flipping'), 500);
+        setTimeout(() => cellElement.classList.remove('flipping'), 600);
       }
     });
   }
@@ -90,15 +93,17 @@ export class GameComponent implements OnInit {
       console.log('AI Move:', aiMove);
       const [row, col] = aiMove;
       this.animateFlip(row, col);
-      this.board = this.gameService.makeMove(
-        this.board,
-        row,
-        col,
-        this.AIPlayer
-      );
-      this.switchPlayer();
-      this.updateScore();
-      this.checkGameState();
+      setTimeout(() => {
+        this.board = this.gameService.makeMove(
+          this.board,
+          row,
+          col,
+          this.AIPlayer
+        );
+        this.switchPlayer();
+        this.updateScore();
+        this.checkGameState();
+      }, 600); // Delay to allow flip animation to complete
     } else {
       this.switchPlayer();
     }
