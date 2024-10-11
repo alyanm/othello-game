@@ -46,10 +46,11 @@ export class GameComponent implements OnInit {
     if (
       this.gameService.isValidMove(this.board, row, col, this.currentPlayer)
     ) {
+      this.gameService.placePiece(this.board, row, col, this.currentPlayer);
       this.animateFlip(row, col);
 
       setTimeout(() => {
-        this.board = this.gameService.makeMove(
+        this.board = this.gameService.flipAffectedPieces(
           this.board,
           row,
           col,
@@ -92,9 +93,10 @@ export class GameComponent implements OnInit {
     if (aiMove) {
       console.log('AI Move:', aiMove);
       const [row, col] = aiMove;
+      this.gameService.placePiece(this.board, row, col, this.currentPlayer);
       this.animateFlip(row, col);
       setTimeout(() => {
-        this.board = this.gameService.makeMove(
+        this.board = this.gameService.flipAffectedPieces(
           this.board,
           row,
           col,

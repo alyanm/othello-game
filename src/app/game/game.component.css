@@ -25,15 +25,19 @@
   background-color: #228b22;
 }
 
+.cell:hover {
+  background-color: #32cd32;
+}
+
 @keyframes flip {
   0% {
     transform: rotateY(0deg);
   }
   50% {
-    transform: rotateY(90deg);
+    transform: rotateY(60deg);
   }
   100% {
-    transform: rotateY(180deg);
+    transform: rotateY(90deg);
   }
 }
 
@@ -43,7 +47,7 @@
   border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transform-style: preserve-3d;
-  transition: transform 0.6;
+  transition: transform 0.6s;
 }
 
 .piece.black {
@@ -55,7 +59,7 @@
 }
 
 .piece.flipping {
-  animation: flip 0.5s;
+  animation: flip 0.6s;
 }
 
 .toggle-switch {

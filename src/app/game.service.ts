@@ -56,7 +56,18 @@ export class GameService {
     return false;
   }
 
-  makeMove(
+  /** Put actual piece down before animating any flips */
+  placePiece(
+    board: string[][],
+    row: number,
+    col: number,
+    currentPlayer: string
+  ) {
+    board[row][col] = currentPlayer;
+  }
+
+  /** Actually flip pieces affected by move. */
+  flipAffectedPieces(
     board: string[][],
     row: number,
     col: number,
@@ -172,7 +183,12 @@ export class GameService {
     let bestScore = -Infinity;
 
     for (const move of availableMoves) {
-      const newBoard = this.makeMove(board, move[0], move[1], this.AIPlayer);
+      const newBoard = this.flipAffectedPieces(
+        board,
+        move[0],
+        move[1],
+        this.AIPlayer
+      );
       const score = this.minimax(
         newBoard,
         this.DEPTH,
@@ -211,7 +227,12 @@ export class GameService {
     if (isMaximizingPlayer) {
       let maxScore = -Infinity;
       for (const move of availableMoves) {
-        const newBoard = this.makeMove(board, move[0], move[1], player);
+        const newBoard = this.flipAffectedPieces(
+          board,
+          move[0],
+          move[1],
+          player
+        );
         const score = this.minimax(newBoard, depth - 1, alpha, beta, false);
         maxScore = Math.max(maxScore, score);
         alpha = Math.max(alpha, score);
@@ -221,7 +242,12 @@ export class GameService {
     } else {
       let minScore = Infinity;
       for (const move of availableMoves) {
-        const newBoard = this.makeMove(board, move[0], move[1], player);
+        const newBoard = this.flipAffectedPieces(
+          board,
+          move[0],
+          move[1],
+          player
+        );
         const score = this.minimax(newBoard, depth - 1, alpha, beta, true);
         minScore = Math.min(minScore, score);
         beta = Math.min(beta, score);
