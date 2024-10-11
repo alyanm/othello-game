@@ -257,10 +257,7 @@ export class GameService {
     }
   }
 
-  private getAvailableMoves(
-    board: string[][],
-    player: string
-  ): [number, number][] {
+  getAvailableMoves(board: string[][], player: string): [number, number][] {
     const availableMoves: [number, number][] = [];
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {

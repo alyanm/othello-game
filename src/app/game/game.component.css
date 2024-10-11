@@ -29,6 +29,10 @@
   background-color: #32cd32;
 }
 
+.cell.valid-move {
+  background-color: #32cd32;
+} /* light green */
+
 @keyframes flip {
   0% {
     transform: rotateY(0deg);

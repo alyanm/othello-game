@@ -38,6 +38,9 @@ export class GameComponent implements OnInit {
     if (!this.isBlack) {
       this.makeAIMove();
     }
+    setTimeout(() => {
+      this.highlightValidMoves();
+    }, 300); // Delay to allow flip update to complete
   }
 
   makeMove(row: number, col: number) {
@@ -46,6 +49,7 @@ export class GameComponent implements OnInit {
     if (
       this.gameService.isValidMove(this.board, row, col, this.currentPlayer)
     ) {
+      this.removeHighlight();
       this.gameService.placePiece(this.board, row, col, this.currentPlayer);
       this.animateFlip(row, col);
 
@@ -66,28 +70,10 @@ export class GameComponent implements OnInit {
     }
   }
 
-  animateFlip(row: number, col: number) {
-    const cellsToFlip = this.gameService.getCellsToFlip(
-      this.board,
-      row,
-      col,
-      this.currentPlayer
-    );
-    console.log('Flipping:', row, col, this.currentPlayer, cellsToFlip);
-    cellsToFlip.forEach(([r, c]) => {
-      const cellElement = document.querySelector(
-        `.row:nth-child(${r + 1}) .cell:nth-child(${c + 1}) .piece`
-      );
-      if (cellElement) {
-        cellElement.classList.add('flipping');
-        console.log('Flipping:', cellElement);
-        setTimeout(() => cellElement.classList.remove('flipping'), 600);
-      }
-    });
-  }
-
   makeAIMove() {
     if (this.gameOver || this.currentPlayer === this.userPlayer) return;
+
+    this.removeHighlight();
 
     const aiMove = this.gameService.getAIMove(this.board, this.AIPlayer);
     if (aiMove) {
@@ -105,6 +91,9 @@ export class GameComponent implements OnInit {
         this.switchPlayer();
         this.updateScore();
         this.checkGameState();
+        setTimeout(() => {
+          this.highlightValidMoves();
+        }, 300); // Delay to allow flip update to complete
       }, 600); // Delay to allow flip animation to complete
     } else {
       this.switchPlayer();
@@ -141,5 +130,45 @@ export class GameComponent implements OnInit {
         }
       }
     }
+  }
+
+  animateFlip(row: number, col: number) {
+    const cellsToFlip = this.gameService.getCellsToFlip(
+      this.board,
+      row,
+      col,
+      this.currentPlayer
+    );
+    console.log('Flipping:', row, col, this.currentPlayer, cellsToFlip);
+    cellsToFlip.forEach(([r, c]) => {
+      const cellElement = document.querySelector(
+        `.row:nth-child(${r + 1}) .cell:nth-child(${c + 1}) .piece`
+      );
+      if (cellElement) {
+        cellElement.classList.add('flipping');
+        console.log('Flipping:', cellElement);
+        setTimeout(() => cellElement.classList.remove('flipping'), 600);
+      }
+    });
+  }
+
+  highlightValidMoves() {
+    const validMoves = this.gameService.getAvailableMoves(
+      this.board,
+      this.currentPlayer
+    );
+    validMoves.forEach(([row, col]) => {
+      const cellElement = document.querySelector(
+        `.row:nth-child(${row + 1}) .cell:nth-child(${col + 1})`
+      );
+      if (cellElement) {
+        cellElement.classList.add('valid-move');
+      }
+    });
+  }
+
+  removeHighlight() {
+    const cells = document.querySelectorAll('.cell.valid-move');
+    cells.forEach((cell) => cell.classList.remove('valid-move'));
   }
 }
