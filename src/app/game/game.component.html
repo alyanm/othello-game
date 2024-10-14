@@ -32,8 +32,13 @@
   </div>
 </div>
 <div class="game_info">
-  <p>Current Player: {{ currentPlayer === "B" ? "Black" : "White" }}</p>
-  <p>Black: {{ score.B }} | White: {{ score.W }}</p>
-  <p>{{ message }}</p>
+  <p>
+    <strong>Current Player:</strong>
+    {{ currentPlayer === "B" ? "Black" : "White" }}
+    {{ isBlack ? "(You)" : "(AI)" }}
+  </p>
+  <p><strong>Score:</strong> Black: {{ score.B }} | White: {{ score.W }}</p>
+  <p><strong>Status:</strong> {{ message }}</p>
   <button (click)="resetGame()">Reset Game</button>
 </div>
+

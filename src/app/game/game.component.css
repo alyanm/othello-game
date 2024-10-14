@@ -114,13 +114,15 @@ input:checked + .toggle-label:before {
 .toggle-inner {
   display: none;
 }
-
 .game_info {
-  /* place game info below the board */
   clear: both;
   padding: 20px;
   border: 2px solid #333;
   background-color: #006400;
   color: white;
   width: 400px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 1.2em;
+  float: left;
 }
