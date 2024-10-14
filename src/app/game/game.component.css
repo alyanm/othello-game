@@ -126,3 +126,11 @@ input:checked + .toggle-label:before {
   font-size: 1.2em;
   float: left;
 }
+
+.color_select {
+  margin: 20px auto;
+  width: 400px;
+  text-align: center;
+  font-size: 1.2em;
+  clear: both;
+}

@@ -1,23 +1,24 @@
 <h1>Othello</h1>
 
-<div class="toggle-switch">
-  <input
-    type="checkbox"
-    id="colorToggle"
-    [(ngModel)]="isBlack"
-    (change)="resetGame()"
-    title="Toggle to select Black or White"
-    placeholder="Select Color"
-  />
-  <label for="colorToggle" class="toggle-label">
-    <span class="toggle-inner"></span>
-    <span class="toggle-switch"></span>
-  </label>
-</div>
+<div class="color_select">
+  <p>Select Color:</p>
+  <div class="toggle-switch">
+    <input
+      type="checkbox"
+      id="colorToggle"
+      [(ngModel)]="isBlack"
+      (change)="resetGame()"
+      title="Toggle to select Black or White"
+      placeholder="Select Color"
+    />
+    <label for="colorToggle" class="toggle-label">
+      <span class="toggle-inner"></span>
+      <span class="toggle-switch"></span>
+    </label>
+  </div>
 
-<p style="text-align: left">
-  You have selected {{ isBlack ? "Black" : "White" }}
-</p>
+  <p class="user_select">You have selected {{ isBlack ? "Black" : "White" }}</p>
+</div>
 
 <div class="board">
   <div *ngFor="let row of board; let i = index" class="row">
@@ -41,4 +42,3 @@
   <p><strong>Status:</strong> {{ message }}</p>
   <button (click)="resetGame()">Reset Game</button>
 </div>
-
