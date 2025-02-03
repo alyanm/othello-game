@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { GameService } from '../game.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,9 @@ export class GameComponent implements OnInit {
   gameOver: boolean = false;
   message: string = '';
 
-  constructor(private gameService: GameService) {}
+  @ViewChildren('boardCell') boardCells!: QueryList<ElementRef>;
+
+  constructor(private gameService: GameService, private renderer: Renderer2) {}
 
   ngOnInit() {
     this.resetGame();
@@ -121,13 +123,11 @@ export class GameComponent implements OnInit {
       this.gameOver = true;
       this.message = 'Game Over!';
       if (this.score.B > this.score.W) {
-        if (this.score.B > this.score.W) {
-          this.message += ' Black wins!';
-        } else if (this.score.B < this.score.W) {
-          this.message += ' White wins!';
-        } else {
-          this.message += " It's a tie!";
-        }
+        this.message += ' Black wins!';
+      } else if (this.score.B < this.score.W) {
+        this.message += ' White wins!';
+      } else {
+        this.message += " It's a tie!";
       }
     }
   }
@@ -140,14 +140,17 @@ export class GameComponent implements OnInit {
       this.currentPlayer
     );
     console.log('Flipping:', row, col, this.currentPlayer, cellsToFlip);
+    
+    const cells = this.boardCells.toArray();
     cellsToFlip.forEach(([r, c]) => {
-      const cellElement = document.querySelector(
-        `.row:nth-child(${r + 1}) .cell:nth-child(${c + 1}) .piece`
-      );
-      if (cellElement) {
-        cellElement.classList.add('flipping');
-        console.log('Flipping:', cellElement);
-        setTimeout(() => cellElement.classList.remove('flipping'), 600);
+      const index = r * 8 + c;
+      const cell = cells[index];
+      if (cell) {
+        const piece = cell.nativeElement.querySelector('.piece');
+        if (piece) {
+          this.renderer.addClass(piece, 'flipping');
+          setTimeout(() => this.renderer.removeClass(piece, 'flipping'), 600);
+        }
       }
     });
   }
@@ -157,18 +160,20 @@ export class GameComponent implements OnInit {
       this.board,
       this.currentPlayer
     );
+    const cells = this.boardCells.toArray();
     validMoves.forEach(([row, col]) => {
-      const cellElement = document.querySelector(
-        `.row:nth-child(${row + 1}) .cell:nth-child(${col + 1})`
-      );
-      if (cellElement) {
-        cellElement.classList.add('valid-move');
+      const index = row * 8 + col;
+      const cell = cells[index];
+      if (cell) {
+        this.renderer.addClass(cell.nativeElement, 'valid-move');
       }
     });
   }
 
   removeHighlight() {
-    const cells = document.querySelectorAll('.cell.valid-move');
-    cells.forEach((cell) => cell.classList.remove('valid-move'));
+    const cells = this.boardCells.toArray();
+    cells.forEach(cell => {
+      this.renderer.removeClass(cell.nativeElement, 'valid-move');
+    });
   }
 }

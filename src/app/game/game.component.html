@@ -25,6 +25,7 @@
     <div
       *ngFor="let cell of row; let j = index"
       class="cell"
+      #boardCell
       (click)="makeMove(i, j)"
     >
       <div *ngIf="cell === 'B'" class="piece black"></div>
